@@ -124,6 +124,11 @@ def cumino_show_type_under_the_cursor():
   write_to_buffer_raw(":t " + function_name)
   send_buffer_to_tmux()
 
+def cumino_show_info_under_the_cursor():
+  name = vim.eval('@z')
+  write_to_buffer_raw(':i %s' % name)
+  send_buffer_to_tmux()
+
 def cumino_send_to_ghci():
   expr = vim.eval("cmd")
   write_to_buffer_raw(expr)
@@ -252,6 +257,13 @@ fun! CuminoShowTypeUnderTheCursor()
   endif
 endfun
 
+fun! CuminoShowInfoUnderTheCursor()
+  if CuminoSessionExists()
+    normal! "zyw
+    python cumino_show_info_under_the_cursor()
+  endif
+endfun
+
 fun! CuminoSendToGhci()
   if CuminoSessionExists()
     call inputsave()
@@ -280,6 +292,9 @@ map <LocalLeader>cv :call CuminoEvalVisual()<RETURN>
 
 "Mnemonic: cumino (Show) Type
 map <LocalLeader>ct :call CuminoShowTypeUnderTheCursor()<RETURN>
+
+"Mnemonic: cumino (Show) Info
+map <LocalLeader>ci :call CuminoShowInfoUnderTheCursor()<RETURN>
 
 "Mnemonic: cumino Send
 map <LocalLeader>cs :call CuminoSendToGhci()<RETURN>
