@@ -1,4 +1,5 @@
 " Copyright (C) 2012 Alfredo Di Napoli
+" Copyright (C) 2014 Nicolas Trangez
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +43,10 @@ endif
 
 if !exists("g:cumino_use_hsenv")
   let g:cumino_use_hsenv = 1
+endif
+
+if !exists("g:cumino_use_cabal_repl")
+  let g:cumino_use_cabal_repl = 0
 endif
 
 " Used to infer whether call :load or simply :r
@@ -174,7 +179,14 @@ fun! CuminoConnect()
     endif
 
     let sandbox = GetSandboxActivationStringIfPresent()
-    let cmd .= "'".sandbox."ghci ". g:cumino_ghci_args ."'\" &"
+
+    if (g:cumino_use_cabal_repl)
+      let repl = "cabal repl"
+    else
+      let repl = "ghci"
+    endif
+
+    let cmd .= "'".sandbox. repl . g:cumino_ghci_args ."'\" &"
     call system(cmd)
 
   endif
